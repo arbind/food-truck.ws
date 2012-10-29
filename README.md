@@ -3,6 +3,9 @@
 
 ## Real-Time Processing of TweetStreams from Food Trucks
 
+### Note:
+- The code base running on heroku at [food-truck.ws](http://food-truck.ws) needs to be merged into this code base
+
 ### MVP:
 + 1. twitter oauth to setup food truck streamers (+++ TODO: move code on heroku into this app)
 + 2. listen for tweets from thousands of food trucks around the world (+++ TODO: move code on heroku into this app)
@@ -13,7 +16,7 @@
 + 7. parsed out trusted location / schedule info from tweets (where possible) (+++ TODO)
 + 8. ui for manual disambiguation of location / schedule info (if parser can't figure it out) (+++ TODO)
 
-### Working TweetService Implementation (#2)
+### Working TweetService Implementation (#3)
 + Stores Tweets in redis
 + Auto prunes the number of tweets
 - To Execute Specs:
