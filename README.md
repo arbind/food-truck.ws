@@ -4,24 +4,25 @@
 ## Real-Time Processing of TweetStreams from Food Trucks
 
 ### MVP:
-+ 1. listen for tweets from thousands of food trucks around the world  (+++ TODO: move code on heroku into this app)
-+ 2. keeps the 10 most recent tweets in redis (food-truck.ws/:food_truck_id)
-+ 3. updates food truck activity in mongodb (+++ TODO)
-+ 4. triggers food truck rank to be recalculated based on recent activity (+++ TODO)
-+ 5. identifies tweets that may have location or schedule info (+++ TODO)
-+ 6. provides trusted location and schedule info, parsed out from tweets (where possible) (+++ TODO)
-+ 7. ui for manual disambiguation of location and schedule info (if parser can't figure it out) (+++ TODO)
++ 1. twitter oauth to setup food truck streamers (+++ TODO: move code on heroku into this app)
++ 2. listen for tweets from thousands of food trucks around the world (+++ TODO: move code on heroku into this app)
++ 3. keeps the 10 most recent tweets in redis (food-truck.ws/:food_truck_screen_name)
++ 4. updates food truck crafts in mongodb with recent activity (+++ TODO)
++ 5. triggers a rank recalculation on every tweet from a food truck (+++ TODO)
++ 6. identifies tweets with location / schedule info (+++ TODO)
++ 7. parsed out trusted location / schedule info from tweets (where possible) (+++ TODO)
++ 8. ui for manual disambiguation of location / schedule info (if parser can't figure it out) (+++ TODO)
 
 ### Working TweetService Implementation (#2)
 + Stores Tweets in redis
 + Auto prunes the number of tweets
-#### To Execute Specs:
+- To Execute Specs:
 mocha -R spec --compilers cofee:coffee-script spec/*/*/*
 
 ### TODO
-+ merge code: move code on heroku that listens to incomming tweets into this app (#1)
-+ config: set up cakefile to execute specs
-+ build missing functionality (#3-7)
++ setup config: use cakefile to execute specs
++ merge code: move code on heroku that listens to incomming tweets into this app (#1-2)
++ build missing functionality (#4-8)
 
 # To start server
 - npm install
