@@ -1,0 +1,50 @@
+{
+  "name": "my-node-ap",
+  "author": "me",
+  "description": "your gonna love this app",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:my-username/my-node-app.git"
+  },
+  "keywords": [
+    "something-cool",
+    "for-my-app",
+    "can-be-put-here"
+  ],
+  "private": true,
+  "scripts": {
+    "start": "node server",
+    "spec":  "cake spec",
+    "test":  "cake spec"
+  },
+  "dependencies": {
+    "coffee-script": ">=1.3",
+    "connect-assets": "*",
+    "express": "3.x",
+    "jade": "*",
+    "stylus": "*",
+    "cookie-sessions": "0",
+    "socket.io": "*",
+    "json2": "*",
+    "redis-url": "*",
+    "mongoskin": "*",
+    "oauth": "*",
+    "ntwitter": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*",
+    "commander": "*",
+    "sinon": "1.5",
+    "socket.io-client": "latest",
+    "jasmine-node": "latest",
+    "supertest": "latest",
+    "jsdom": "latest",
+    "redis": "*"
+   },
+  "engines": {
+    "node": ">=0.8.12",
+    "npm": ">=1.1.49"
+  }  
+}
