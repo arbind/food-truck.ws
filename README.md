@@ -19,8 +19,8 @@
 ### Working TweetService Implementation (#3)
 + Stores Tweets in redis
 + Auto prunes the number of tweets
-- To Execute Specs:
-mocha -R spec --compilers cofee:coffee-script spec/*/*/*
++ To Execute Specs:
+  * mocha -R spec --compilers cofee:coffee-script spec/*/*/*
 
 ### TODO
 + setup config: use cakefile to execute specs
