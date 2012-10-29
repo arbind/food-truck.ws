@@ -1,7 +1,7 @@
 # [food-truck.ws](http://food-truck.ws)
 ================
 
-## Real-Time Processing of TweetStreams from Food Trucks
+## Processes Food Truck TweetStreams
 
 ### Note:
 - The code base running on heroku at [food-truck.ws](http://food-truck.ws) needs to be merged into this code base
