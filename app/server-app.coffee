@@ -17,7 +17,7 @@ css.root = 'stylesheets'
 js.root = 'javascripts'
 
 app.configure ->
-  app.set 'port', process.env.PORT || process.env.VMC_APP_PORT || 3000
+  app.set 'port', process.env.PORT || process.env.VMC_APP_PORT || 8888
   app.set 'views', (__dirname + '/views')
   app.set 'view engine', 'jade'
   app.use express.favicon()
@@ -44,6 +44,7 @@ app.get '/oauth/twitter/foodtruckws/callback', routes.oauth_twitter.foodtruckws_
 app.get '/tweet-streamers', routes.tweet_streamers.index
 
 
+appData.arg1 = 'Sample-Arg'
 appData.skinTweetAPIAccounts = mongoDB.collection 'tweet_api_accounts'
 
 r = appData.skinTweetAPIAccounts.find "is_tweet_streamer" : true

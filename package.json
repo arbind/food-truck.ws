@@ -15,8 +15,8 @@
   "private": true,
   "scripts": {
     "start": "node server",
-    "spec":  "cake spec",
-    "test":  "cake spec"
+    "test":  "cake spec",
+    "spec":  "cake spec"
   },
   "dependencies": {
     "coffee-script": ">=1.3",
