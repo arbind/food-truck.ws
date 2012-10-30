@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1 Food Truck.ws
+  h2 Tweet Streamers
+  p
+    a(href="http://twitter.com/logout", target="_blank")  Twitter Logout
+
+  each item in list
+    p
+      span.scren-name= item.screen_name 
+      &nbsp
+      span.auth
+        if item.oauth && item.oauth.twitter && item.oauth.twitter.foodtruckws
+          i
+            = item.oauth.twitter.foodtruckws.access_token 
+            [
+            = item.oauth.twitter.foodtruckws.access_token.secret
+            ]
+        else
+          a(href="/oauth/twitter/foodtruckws/login")
+            b authorize

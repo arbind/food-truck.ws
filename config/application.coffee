@@ -3,6 +3,9 @@ console.log "***********************"
 console.log "#{node_env} environment"
 console.log "-----------------------"
 
+# global space for parameter passing :)
+global.appData = {}
+
 # application paths
 global.rootPath = {}
 rootDir = process.cwd()
@@ -11,6 +14,7 @@ rootPath.config =   (rootPath.path + 'config/')
 rootPath.app =      (rootPath.path + 'app/')
 rootPath.db =       (rootPath.db + 'db/')
 rootPath.public =   (rootPath.public + 'public/')
+rootPath.assets =   (rootPath.app + 'assets/')
 rootPath.models =   (rootPath.app + 'models/')
 rootPath.services = (rootPath.app + 'services/')
 rootPath.utils =    (rootPath.app + 'utils/')
@@ -27,6 +31,9 @@ global.redisTestDB = 2
 global.redisDevelopmentDB = 1
 global.redisProductionDB = 0
 
+global.mongoURL = null
+
+
 # load runtime environment
 require "./environments/#{node_env}"
 
@@ -34,6 +41,11 @@ require "./environments/#{node_env}"
 (require rootPath.models + 'index')
 (require rootPath.services + 'index')
 (require rootPath.utils + 'index')
+
+# connect to mondoDB
+if mongoURL
+  global.mongoDB = (require 'mongoskin').db mongoURL
+  # +++ create database if it does not exists?
 
 # connect to redis
 if redisURL

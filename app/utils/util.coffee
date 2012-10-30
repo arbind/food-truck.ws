@@ -15,4 +15,14 @@ class Util
     fn = -> (process.nextTick callback)
     setTimeout fn, 8 # wait a few ms
 
+  @delay = (ms, fn) -> setTimeout fn, ms
+
+  @sleep = (ms) -> 
+    x = 0
+    start = new Date().getTime();
+    while ((new Date().getTime() - start) < ms)
+      x += 1
+
+
+
 module.exports = Util

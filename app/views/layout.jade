@@ -2,7 +2,26 @@ doctype 5
 html
   head
     title= title
+
     !=css('style')
+
+    script(type='text/javascript', src='/socket.io/socket.io.js')
     !=js('application')
+
+    script#tweet-template(type='text/template')
+      blockquote.cut.tweet.no-display
+        .vcard.author
+          a(href='https://twitter.com/{{user.screen_name}}', target='_blank')
+            span.avatar
+              img.photo(src='{{user.profile_image_url}}')
+            span.fn {{user.name}}
+            span.screen-name @{{user.screen_name}}
+        .entry {{text}}
+        .footer
+          .how-long-ago {{created_at}}
+          .location {{location}}
+          a.view-details(href='https://twitter.com/{{user.screen_name}}/statuses/{{id}}', target='_blank')
+            .hidden view details
+
   body
     block content

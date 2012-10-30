@@ -5,6 +5,9 @@ global.debug = true
 global.redisURL = 'redis://127.0.0.1:6379'
 global.redisDBNumber = redisTestDB
 
+# DB:mongo
+global.mongoURL = 'localhost:27017/food_truck_test'
+
 # additional application paths in test environment
 rootPath.spec = (rootPath.path + 'spec/')
 rootPath.fixtures = (rootPath.spec + 'fixtures/')
