@@ -17,13 +17,12 @@ class TweetStreamService extends EventEmitter
 
   launchNextStream: () ->
     account = null
-    for account, idx in @accounts
+    for account, idx in @accounts # find the next account that hasnot been launched
       break unless account.twitterClient
     return unless account
     return if account.twitterClient
-    console.log idx
+    # console.log idx
     @launchStream account 
-    # @launchStream @accounts[7]
 
   launchStream: (account) ->
     return if not account # null account

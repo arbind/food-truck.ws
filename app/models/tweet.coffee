@@ -1,8 +1,8 @@
 ModelBase = (require './model-base')
-TweetService = (require rootPath.services + 'tweet-service')
+TweetStoreService = (require rootPath.services + 'tweet-store-service')
 
 class Tweet extends ModelBase
-  Service: TweetService
+  Service: TweetStoreService
 
   text: ()-> (@get 'text')
 

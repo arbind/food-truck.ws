@@ -1,6 +1,6 @@
 ServiceBase = (require './service-base')
 
-class TweetService extends ServiceBase
+class TweetStoreService extends ServiceBase
   @logError = global.logError
 
   # call back errors
@@ -10,7 +10,7 @@ class TweetService extends ServiceBase
 
   # redis time to live
   # @ttl = 3*60*60*24 # 3 days
-  # @setTTL: (time_limit)-> TweetService.ttl = time_limit if time_limit
+  # @setTTL: (time_limit)-> TweetStoreService.ttl = time_limit if time_limit
 
   @MAX_USER_TWEETS = 10
 
@@ -83,7 +83,7 @@ class TweetService extends ServiceBase
       try 
         result = @_tweetFromJSON(json_string)
       catch exception
-        @logError 'TweetService @_findTweetForKey: \n', exception
+        @logError 'TweetStoreService @_findTweetForKey: \n', exception
         err = exception
       finally
         (callback err, result)
@@ -102,7 +102,7 @@ class TweetService extends ServiceBase
         try
           resultList = @_tweetsFromJSONArray jsonArray
         catch exception
-          @logError 'TweetService @findUserTweet: \n', exception
+          @logError 'TweetStoreService @findUserTweet: \n', exception
           err = exception
         finally
           (callback err, resultList)
@@ -134,4 +134,4 @@ class TweetService extends ServiceBase
       tweetList[idx]?.delete() while idx++ < numTweets
 
 
-module.exports = TweetService
+module.exports = TweetStoreService

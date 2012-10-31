@@ -1,3 +1,3 @@
-global.ServiceBase = (require rootPath.services + 'service-base')
-global.TweetService = (require rootPath.services + 'tweet-service')
-global.TweetStreamService = (require rootPath.services + 'tweet-stream-service')
+requireModuleInFile rootPath.services, 'service-base'
+requireModuleInFile rootPath.services, 'tweet-store-service'
+requireModuleInFile rootPath.services, 'tweet-stream-service'

@@ -74,7 +74,7 @@ streamers =
   miami: { greenLantern:[], spidy:[] }
 
 for streamer, tweeters of streamers
-  for screenName, tweets of tweeters
+  for own screenName, tweets of tweeters
     for i in [0..10]
       location = "#{streamer}, USA"
       text = "A #{screenName}-#{i} tweet from #{streamer}"

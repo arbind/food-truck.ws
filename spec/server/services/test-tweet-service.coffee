@@ -18,9 +18,9 @@ deleteFixtureTweets = ->
     for tweets,tweets of tweeters
       tweet.delete() for tweet in tweets
 
-describe 'TweetServices', ->
+describe 'TweetStoreService', ->
   # setup test variables
-  TweetService.MAX_USER_TWEETS = 5
+  TweetStoreService.MAX_USER_TWEETS = 5
 
   @superman0 = streamers.la.superman[0] # tweet from LA - superman
   @superman1 = streamers.la.superman[1] # tweet from LA
@@ -52,13 +52,13 @@ describe 'TweetServices', ->
   describe 'initial state', =>
     before (done)=> # save a tweet  to an empty db
       should.exist @superman0 # make sure we have a new object that can be saved
-      TweetService.findTweet @superman0.id(), (err, nada)-> # make sure the new object is not already in db
+      TweetStoreService.findTweet @superman0.id(), (err, nada)-> # make sure the new object is not already in db
         should.not.exist err, 'err'
         should.not.exist nada, 'nada'
       done()
 
     it '(tweetCount) starts at 0', (done)=>
-      TweetService.tweetCount (err, count)=>
+      TweetStoreService.tweetCount (err, count)=>
         (expect count).to.equal 0
         done()
 
@@ -83,13 +83,13 @@ describe 'TweetServices', ->
     it '(save @superman3)', (done)=> @superman3.save().should.equal true; Util.aMoment(done)
 
     it '(tweetCount) = 12', (done)=>
-      TweetService.tweetCount (err, count)=>
+      TweetStoreService.tweetCount (err, count)=>
         (expect count).to.equal 12
         done()
 
   describe 'find tweets: most recent tweets on top', =>
     it '(findTweet superman2)', (done)=>
-      TweetService.findTweet @superman2.id(), (err, twt)=>
+      TweetStoreService.findTweet @superman2.id(), (err, twt)=>
         should.not.exist err, 'err'
         should.exist twt, 'tweet'
         twt.id().should.equal @superman2.id()
@@ -97,7 +97,7 @@ describe 'TweetServices', ->
         done()
 
     it '(findUserTweets superman)', (done)=>
-      TweetService.findUserTweets @superman0.screen_name(), (err, twtList)=>
+      TweetStoreService.findUserTweets @superman0.screen_name(), (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
         twtList.length.should.equal 4
@@ -113,7 +113,7 @@ describe 'TweetServices', ->
         done()
 
     it '(findUserTweets limit2, superman)', (done)=>
-      TweetService.findUserTweets @superman0.screen_name(), 2, (err, twtList)=>
+      TweetStoreService.findUserTweets @superman0.screen_name(), 2, (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
         twtList.length.should.equal 2
@@ -123,8 +123,8 @@ describe 'TweetServices', ->
         done()
 
     it '(findStreamerTweets la)', (done)=>
-      TweetService.findUserTweets @superman0.screen_name(), 2, (err, twtList)=>
-      TweetService.findStreamerTweets @superman0.streamer_screen_name(), (err, twtList)=>
+      TweetStoreService.findUserTweets @superman0.screen_name(), 2, (err, twtList)=>
+      TweetStoreService.findStreamerTweets @superman0.streamer_screen_name(), (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
         twtList.length.should.equal 8
@@ -141,7 +141,7 @@ describe 'TweetServices', ->
         done()
 
     it '(findStreamerTweets limit6, la)', (done)=>
-      TweetService.findStreamerTweets @superman0.streamer_screen_name(), 5, (err, twtList)=>
+      TweetStoreService.findStreamerTweets @superman0.streamer_screen_name(), 5, (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
         twtList.length.should.equal 5
@@ -155,7 +155,7 @@ describe 'TweetServices', ->
         done()
 
     it '(findAllTweets)', (done)=>
-      TweetService.findAllTweets (err, twtList)=>
+      TweetStoreService.findAllTweets (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
         twtList.length.should.equal 12
@@ -176,7 +176,7 @@ describe 'TweetServices', ->
         done()
 
     it '(findAllTweets limit6, la)', (done)=>
-      TweetService.findAllTweets 6, (err, twtList)=>
+      TweetStoreService.findAllTweets 6, (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
         twtList.length.should.equal 6
@@ -194,29 +194,29 @@ describe 'TweetServices', ->
     it '(delete tweet)', (done)=>
       tweet = @superman3
       tweet.save()
-      TweetService.tweetCount (err, numTweets)=>                                                    # number of total tweets
-        TweetService.findUserTweets tweet.screen_name(), 0, (err, userTweets)=>                  # list of user tweets
-          TweetService.findStreamerTweets tweet.streamer_screen_name(), 0, (err, streamerTweets)=>  # list of streamer tweets
+      TweetStoreService.tweetCount (err, numTweets)=>                                                    # number of total tweets
+        TweetStoreService.findUserTweets tweet.screen_name(), 0, (err, userTweets)=>                  # list of user tweets
+          TweetStoreService.findStreamerTweets tweet.streamer_screen_name(), 0, (err, streamerTweets)=>  # list of streamer tweets
             tweet.delete()                                                                          # delete a tweet
-            TweetService.tweetCount (err, tweetsLeft)=>                                             # number of total tweets left
+            TweetStoreService.tweetCount (err, tweetsLeft)=>                                             # number of total tweets left
               (expect tweetsLeft).to.equal (numTweets-1), 'tweets left'
-              TweetService.findUserTweets tweet.screen_name(), 0, (err, userTweetsLeft)=>           # list of user tweets left
+              TweetStoreService.findUserTweets tweet.screen_name(), 0, (err, userTweetsLeft)=>           # list of user tweets left
                 (expect userTweetsLeft.length).to.equal (userTweets.length - 1) , 'user tweets left'
-                TweetService.findStreamerTweets tweet.streamer_screen_name(), 0, (err, streamerTweetsLeft)=> # list of streamer tweets left
+                TweetStoreService.findStreamerTweets tweet.streamer_screen_name(), 0, (err, streamerTweetsLeft)=> # list of streamer tweets left
                   (expect streamerTweetsLeft.length).to.equal (streamerTweets.length-1) , 'streamer tweets left'
                   done()
 
   describe 'auto prune tweet', =>
     it '(userTweetCount superman) = 3', (done)=>
-      TweetService.findUserTweets superman0.screen_name(), 0, (err, userTweets)=>                  # list of user tweets
+      TweetStoreService.findUserTweets superman0.screen_name(), 0, (err, userTweets)=>                  # list of user tweets
         (expect userTweets.length).to.equal 3
         done()
     it '(streamerTweetCount superman) = 7', (done)=>
-      TweetService.findStreamerTweets superman0.streamer_screen_name(), 0, (err, userTweets)=>                  # list of user tweets
+      TweetStoreService.findStreamerTweets superman0.streamer_screen_name(), 0, (err, userTweets)=>                  # list of user tweets
         (expect userTweets.length).to.equal 7
         done()
     it '(tweetCount) = 11', (done)=>
-      TweetService.tweetCount (err, count)=>
+      TweetStoreService.tweetCount (err, count)=>
         (expect count).to.equal 11
         done()
 
@@ -234,16 +234,16 @@ describe 'TweetServices', ->
     it '-> saved 10 superman tweets', (done)=> (expect true).to.equal true; Util.aMoment(done)
 
     it '(userTweetCount superman): pruned to 5 ', (done)=>
-      TweetService.findUserTweets superman0.screen_name(), 0, (err, userTweets)=>                  # list of user tweets
+      TweetStoreService.findUserTweets superman0.screen_name(), 0, (err, userTweets)=>                  # list of user tweets
         (expect userTweets.length).to.equal 5
         (uValue userTweets[0]).should.equal (uValue @superman9)
         done()
     it '(streamerTweetCount superman): pruned to 9', (done)=>
-      TweetService.findStreamerTweets superman0.streamer_screen_name(), 0, (err, userTweets)=>                  # list of user tweets
+      TweetStoreService.findStreamerTweets superman0.streamer_screen_name(), 0, (err, userTweets)=>                  # list of user tweets
         (expect userTweets.length).to.equal 9
         done()
     it '(tweetCount): pruned to 13', (done)=>
-      TweetService.tweetCount (err, count)=>
+      TweetStoreService.tweetCount (err, count)=>
         (expect count).to.equal 13
         done()
 
@@ -253,7 +253,7 @@ describe 'TweetServices', ->
       done()
 
     it '(tweetCount) ends at 0', (done)=>
-      TweetService.tweetCount (err, count)=>
+      TweetStoreService.tweetCount (err, count)=>
         (expect count).to.equal 0
         done()
 

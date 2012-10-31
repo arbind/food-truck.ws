@@ -3,26 +3,50 @@ console.log "***********************"
 console.log "#{node_env} environment"
 console.log "-----------------------"
 
+fs = (require 'fs')
+
 # global space for parameter passing :)
 global.appData = {}
 
 # application paths
 global.rootPath = {}
 rootDir = process.cwd()
-rootPath.path =     (rootDir + '/')
-rootPath.config =   (rootPath.path + 'config/')
-rootPath.app =      (rootPath.path + 'app/')
-rootPath.db =       (rootPath.db + 'db/')
-rootPath.public =   (rootPath.public + 'public/')
-rootPath.assets =   (rootPath.app + 'assets/')
-rootPath.models =   (rootPath.app + 'models/')
-rootPath.services = (rootPath.app + 'services/')
-rootPath.utils =    (rootPath.app + 'utils/')
+rootPath.path =       (rootDir + '/')
+rootPath.db =         (rootPath.path + 'db/')
+rootPath.config =     (rootPath.path + 'config/')
+rootPath.public =     (rootPath.path + 'public/')
+
+rootPath.app =        (rootPath.path + 'app/')
+rootPath.utils =      (rootPath.app + 'utils/')
+rootPath.assets =     (rootPath.app + 'assets/')
+rootPath.models =     (rootPath.app + 'models/')
+rootPath.services =   (rootPath.app + 'services/')
+rootPath.extentions = (rootPath.app + 'extentions/')
+
+global.requireModuleInFile = (path, filename)->
+  filePath = path+filename
+  try
+    if String.prototype.toClassName
+      className = filename.toClassName()
+      clazz = require filePath    # if anything is exported, assume that it is a Class
+      global[className] = clazz   # make the class available globally
+    else
+      require filePath
+      console.log "loaded file #{filename}"
+  catch exception
+    console.log ""
+    console.log "!! could not load #{filename} from #{path}"
+    throw exception
+
+global.requireModulesInDirectory = (path)->
+  (requireModuleInFile path, f) for f in fs.readdirSync(path)
 
 # load some usefull stuff
-global.Util = (require rootPath.utils + 'util')
-global.puts = (require rootPath.utils + 'puts')
-global.log  = (require rootPath.utils + 'log')
+requireModulesInDirectory rootPath.extentions
+requireModulesInDirectory rootPath.utils
+# global.Util = (require rootPath.utils + 'util')
+# global.puts = (require rootPath.utils + 'puts')
+# global.log  = (require rootPath.utils + 'log')
 
 # set application configurations
 global.redisURL = null # runtime environment would override this, if using redis
@@ -37,10 +61,8 @@ global.mongoURL = null
 # load runtime environment
 require "./environments/#{node_env}"
 
-# load app classes
-(require rootPath.models + 'index')
-(require rootPath.services + 'index')
-(require rootPath.utils + 'index')
+require rootPath.models + 'index'
+require rootPath.services + 'index'
 
 # connect to mondoDB
 if mongoURL
