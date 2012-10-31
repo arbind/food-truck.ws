@@ -3,9 +3,7 @@ socket.on 'connect', ->
   #socket.emit 'set nickname', prompt 'What is your nickname?'
   socket.on 'tweet-stream-login', (username, location, err, data)->
     # ($ '#message').append "<div>#{username}: login from #{location}with #{data.friends_count} friends and #{data.followers_count} followers</div>"
-  socket.on 'tweet', (username, location, data)->
-    console.log data
-    ($ 'body').trigger 'tweet', data
+  socket.on 'tweet', (tweetData)-> ($ 'body').trigger 'tweet', tweetData
 
   socket.on 'ready', ->
     ($ '#status').html 'connected'
@@ -40,10 +38,10 @@ $ ->
   window.TweetStreamDisplay = Backbone.View.extend
     initialize: () ->
       @collection = new TweetStream
+      ($ 'body').bind 'tweet', (ev, tweetData) => @collection.add new Tweet tweetData
       @collection.on 'add', @addTweet, @
-      ($ 'body').bind 'tweet', (ev, data) => @collection.add new Tweet data
       @render
-  
+      
     addTweet: (tweet) ->
       tweetDisplay = new TweetDisplay
         model: tweet

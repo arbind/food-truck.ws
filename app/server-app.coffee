@@ -52,13 +52,12 @@ r.toArray (err, items)->
   appData.tweetStreamers = items
   TweetStreamService.load items
 
-TweetStreamService.on 'tweet', (username, location, data)->
-  console.log "................ #{username}: tweet: #{data.text}"
-  console.log data
+TweetStreamService.on 'tweet', (tweet)->
+  # console.log tweet.toJSON()
 
-TweetStreamService.on 'error', (username, location, err, code)->
-  console.log "!!!!!!!!!!!!!!!! #{username}: Unexpected Error! #{err}:#{code}"
-
+TweetStreamService.on 'error', (err, streamer_screen_name, streamer_location)->
+  console.log "!! #{streamer_screen_name}[#{streamer_location}]: Unexpected Error!"
+  console.log err
 
 httpServer  = http.createServer app
 io          = socketIO.listen httpServer
@@ -77,10 +76,8 @@ io.configure ->
 io.sockets.on 'connection', (socket)->
   console.log 'connection requested'
 
-  TweetStreamService.on 'tweet', (username, location, data)->
-    console.log "capturing username: #{username}"
-    console.log "capturing address: #{location}"
-    socket.emit 'tweet', username, location, data
+  TweetStreamService.on 'tweet', (tweet)->
+    socket.emit 'tweet', tweet.toEvent()
 
   socket.on 'set nickname', (name)->
     socket.set 'nickname', name, () ->

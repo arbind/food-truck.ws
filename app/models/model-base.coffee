@@ -17,5 +17,6 @@ class ModelBase
   updateAttribute: (field, value)-> (@Service.udpateAttributes @, field, value)
 
   toJSON: () -> JSON.stringify @attributes
+  toEvent: () -> @attributes
 
 module.exports = ModelBase
