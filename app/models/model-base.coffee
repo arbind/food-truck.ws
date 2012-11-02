@@ -2,7 +2,6 @@ class ModelBase
   attributes: null
 
   constructor: (@attributes) ->
-
   id: ()-> @get('id')
 
   get: (attName) -> @attributes[attName] || null
@@ -18,5 +17,11 @@ class ModelBase
 
   toJSON: () -> JSON.stringify @attributes
   toEvent: () -> @attributes
+
+  emitTo: (channel) ->
+    throw "No className defined" unless @className?
+    channel.emit @className(), @toEvent()
+
+  className: ()-> throw "@className() not defined:\n#{@toJSON()}"
 
 module.exports = ModelBase

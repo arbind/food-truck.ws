@@ -15,7 +15,7 @@ class TweetStoreService extends ServiceBase
   @MAX_USER_TWEETS = 10
 
   # redis keys
-  @w = "w" # prefix for collection of all tweets
+  @w = "w" # prefix for set of all tweets
   @idKey:          (tweet_id)=> "t:#{tweet_id}"
   @tweetKey:          (tweet)=> @idKey tweet.id()
   @userKey:     (screen_name)=> "u:#{screen_name}"
@@ -28,6 +28,7 @@ class TweetStoreService extends ServiceBase
   @save: (tweet)=>
     return false unless tweet
     try 
+      console.log "Saving #{tweet.text()}"
       tweetKey = (@tweetKey tweet)
       score = 0 - Date.now()                                                      # score in reverse chronological order
       redis.set tweetKey, tweet.toJSON()                                          # save tweet by tweet id
@@ -73,7 +74,6 @@ class TweetStoreService extends ServiceBase
       catch exception
         logError exception
 
-
   # sort of private methods
 
   # finders
@@ -83,27 +83,22 @@ class TweetStoreService extends ServiceBase
       try 
         result = @_tweetFromJSON(json_string)
       catch exception
-        @logError 'TweetStoreService @_findTweetForKey: \n', exception
-        err = exception
+        err = @logError 'TweetStoreService @_findTweetForKey: \n', exception
       finally
         (callback err, result)
 
   @_dereferenceTweetsForZKey: (zkey,limit, callback)=>
     @_findTweetRefsForZKey zkey, limit, (err, tweet_id_refs)=>
-      if err # don't go further if there was an error
-        (callback err, null); return
+      return (callback err) if err
+      return (callback null, []) unless tweet_id_refs and 0<tweet_id_refs.length
 
-      unless tweet_id_refs and 0<tweet_id_refs.length #don't lookup refs unless we have at least 1
-        (callback null, null); return
-
-      tweetKeys  = ((@idKey tweet_id) for tweet_id in tweet_id_refs) # convert tweet_id into key a tweet key (t:tweet_id)
+      tweetKeys  = ((@idKey tweet_id) for tweet_id in tweet_id_refs) # map tweet_id to a tweet key (t:tweet_id)
       redis.mget tweetKeys, (err, jsonArray)=>
-        resultList = null
+        resultList = []
         try
           resultList = @_tweetsFromJSONArray jsonArray
         catch exception
-          @logError 'TweetStoreService @findUserTweet: \n', exception
-          err = exception
+          err = @logError 'TweetStoreService @_dereferenceTweetsForZKey: \n', exception
         finally
           (callback err, resultList)
 
@@ -119,9 +114,11 @@ class TweetStoreService extends ServiceBase
     new Tweet JSON.parse(json_string)
 
   @_tweetsFromJSONArray: (jsonArray)=>
-    resultList = [];
+    resultList = []
     return resultList unless jsonArray
-    (resultList.push (@_tweetFromJSON json_string) ) for json_string in jsonArray
+    for json_string in jsonArray
+      tweet = (@_tweetFromJSON json_string) if json_string?
+      resultList.push tweet if tweet?
     resultList
 
   @_pruneTweets: (screen_name) =>
@@ -132,6 +129,5 @@ class TweetStoreService extends ServiceBase
       return if @MAX_USER_TWEETS > numTweets
       idx = @MAX_USER_TWEETS - 1
       tweetList[idx]?.delete() while idx++ < numTweets
-
 
 module.exports = TweetStoreService

@@ -50,9 +50,9 @@ appData.skinTweetAPIAccounts = mongoDB.collection 'tweet_api_accounts'
 r = appData.skinTweetAPIAccounts.find "is_tweet_streamer" : true
 r.toArray (err, items)-> 
   appData.tweetStreamers = items
-  TweetStreamService.load items
+  # TweetStreamService.load items   !!!! Temp
 
-TweetStreamService.on 'tweet', (tweet)->
+TweetStreamService.on 'Tweet', (tweet)->
   # console.log tweet.toJSON()
 
 TweetStreamService.on 'error', (err, streamer_screen_name, streamer_location)->
@@ -74,16 +74,20 @@ io.configure ->
   (io.set "log level", 2) 
 
 io.sockets.on 'connection', (socket)->
-  console.log 'connection requested'
+  TweetStreamService.on 'Tweet', (tweet)-> tweet.emitTo(socket) # emit any new tweets that stream in
 
-  TweetStreamService.on 'tweet', (tweet)->
-    socket.emit 'tweet', tweet.toEvent()
+  socket.on 'user-tweets', (screen_name) => # lookup tweets for user
+    TweetStoreService.findUserTweets screen_name, (err, tweets) ->
+      tweet.emitTo(socket) for tweet in tweets if tweets?
 
-  socket.on 'set nickname', (name)->
-    socket.set 'nickname', name, () ->
-      socket.emit 'ready'
+  socket.on 'streamer-tweets', (screen_name) => # lookup tweets for streamer
+    TweetStoreService.findStreamerTweets screen_name, (err, tweets) ->
+      tweet.emitTo(socket) for tweet in tweets if tweets?
 
-  socket.on 'msg', ->
-    socket.get 'nickname', (err, name)->
-      console.log "chat message from #{name}"
-  
+  # socket.on 'set nickname', (name)->
+  #   socket.set 'nickname', name, () ->
+  #     socket.emit 'ready'
+
+  # socket.on 'msg', ->
+  #   socket.get 'nickname', (err, name)->
+  #     console.log "chat message from #{name}"

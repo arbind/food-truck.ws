@@ -3,6 +3,7 @@ TweetStoreService = (require rootPath.services + 'tweet-store-service')
 
 class Tweet extends ModelBase
   Service: TweetStoreService
+  className: ()-> 'Tweet'
 
   text: ()-> (@get 'text')
 

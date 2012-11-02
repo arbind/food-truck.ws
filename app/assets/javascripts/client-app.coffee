@@ -1,14 +1,9 @@
 socket = io.connect()
 socket.on 'connect', ->
-  #socket.emit 'set nickname', prompt 'What is your nickname?'
-  socket.on 'tweet-stream-login', (username, location, err, data)->
-    # ($ '#message').append "<div>#{username}: login from #{location}with #{data.friends_count} friends and #{data.followers_count} followers</div>"
-  socket.on 'tweet', (tweetData)-> ($ 'body').trigger 'tweet', tweetData
+  socket.on 'Tweet', (tweetData)-> ($ 'body').trigger 'Tweet', tweetData
 
-  socket.on 'ready', ->
-    ($ '#status').html 'connected'
-    # socket.emit 'msg', prompt 'What you got to say?'
-
+window.loadUserTweets = (screen_name) -> socket.emit 'user-tweets', screen_name #'GGCvegas'
+window.loadStreamerTweets = (screen_name) -> socket.emit 'streamer-tweets', screen_name # 'FTMUSTXAUS'
 
 window.ClientApp = class ClientApp
   @views:{}
@@ -38,10 +33,10 @@ $ ->
   window.TweetStreamDisplay = Backbone.View.extend
     initialize: () ->
       @collection = new TweetStream
-      ($ 'body').bind 'tweet', (ev, tweetData) => @collection.add new Tweet tweetData
+      ($ 'body').bind 'Tweet', (ev, tweetData) => @collection.add new Tweet tweetData
       @collection.on 'add', @addTweet, @
       @render
-      
+
     addTweet: (tweet) ->
       tweetDisplay = new TweetDisplay
         model: tweet

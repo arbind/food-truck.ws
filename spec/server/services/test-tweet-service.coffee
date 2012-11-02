@@ -67,7 +67,7 @@ describe 'TweetStoreService', ->
         keys.should.have.length 0
         done()
 
-  describe 'create tweets', =>
+  describe 'save a few tweets from la (superman and batman) and austin (flash)', =>
     # save 12 tweets - in this order:
     it '(save @superman0)', (done)=> @superman0.save().should.equal true; Util.aMoment(done)
     it '(save @batman0)',   (done)=>   @batman0.save().should.equal true; Util.aMoment(done)
@@ -82,7 +82,7 @@ describe 'TweetStoreService', ->
     it '(save @flash3)',    (done)=>    @flash3.save().should.equal true; Util.aMoment(done)
     it '(save @superman3)', (done)=> @superman3.save().should.equal true; Util.aMoment(done)
 
-    it '(tweetCount) = 12', (done)=>
+    it '.tweetCount = 12', (done)=>
       TweetStoreService.tweetCount (err, count)=>
         (expect count).to.equal 12
         done()
@@ -96,7 +96,7 @@ describe 'TweetStoreService', ->
         twt.text().should.equal @superman2.text()
         done()
 
-    it '(findUserTweets superman)', (done)=>
+    it "(findUserTweets superman) - get all of superman's tweets", (done)=>
       TweetStoreService.findUserTweets @superman0.screen_name(), (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
@@ -112,7 +112,7 @@ describe 'TweetStoreService', ->
         (uValue twtList[3]).should.equal (uValue superman0)
         done()
 
-    it '(findUserTweets limit2, superman)', (done)=>
+    it "(findUserTweets limit2, superman) - get 2 most recent tweets from superman", (done)=>
       TweetStoreService.findUserTweets @superman0.screen_name(), 2, (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
@@ -122,7 +122,7 @@ describe 'TweetStoreService', ->
         (uValue twtList[1]).should.equal (uValue @superman2)
         done()
 
-    it '(findStreamerTweets la)', (done)=>
+    it '(findStreamerTweets la) find tweets from la (superman and batman)', (done)=>
       TweetStoreService.findUserTweets @superman0.screen_name(), 2, (err, twtList)=>
       TweetStoreService.findStreamerTweets @superman0.streamer_screen_name(), (err, twtList)=>
         should.not.exist err, 'err'
@@ -140,7 +140,7 @@ describe 'TweetStoreService', ->
 
         done()
 
-    it '(findStreamerTweets limit6, la)', (done)=>
+    it '(findStreamerTweets limit6, la) find the 6 most recent tweets from la', (done)=>
       TweetStoreService.findStreamerTweets @superman0.streamer_screen_name(), 5, (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
@@ -175,7 +175,7 @@ describe 'TweetStoreService', ->
         (uValue twtList[11]).should.equal (uValue @superman0)
         done()
 
-    it '(findAllTweets limit6, la)', (done)=>
+    it '(findAllTweets limit6)', (done)=>
       TweetStoreService.findAllTweets 6, (err, twtList)=>
         should.not.exist err, 'err'
         should.exist twtList, 'tweetList'
