@@ -20,7 +20,10 @@ class ModelBase
 
   emitTo: (channel) ->
     throw "No className defined" unless @className?
-    channel.emit @className(), @toEvent()
+    if channel.manager?.settings?.transports? # send attributes when emitting over socket.io
+      channel.emit @className(), @toEvent()
+    else                                      # send model object when emitting through EventEmitter
+      channel.emit @className(), @
 
   className: ()-> throw "@className() not defined:\n#{@toJSON()}"
 

@@ -53,11 +53,13 @@ class TweetStreamService extends EventEmitter
         console.log "#{twitterClient.streamer_screen_name}: no new tweets"
         return
 
+      twitterClient.since_id = tweets[0].id # mark the most recent tweet id, on the next poll we can retrieve new tweets since
+
       for tweetData in tweets
         tweetData.streamer = {screen_name: twitterClient.streamer_screen_name, location: twitterClient.streamer_location }
         tweet = new Tweet tweetData
         tweet.save()
+        console.log @emitter.transports
         tweet.emitTo(@emitter)
-      twitterClient.since_id = tweets[0].id # mark the most recent tweet id, on the next poll we can retrieve new tweets since
 
 module.exports = new TweetStreamService

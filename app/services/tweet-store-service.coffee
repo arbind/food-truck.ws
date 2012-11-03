@@ -98,7 +98,7 @@ class TweetStoreService extends ServiceBase
         try
           resultList = @_tweetsFromJSONArray jsonArray
         catch exception
-          err = @logError 'TweetStoreService @_dereferenceTweetsForZKey: \n', exception
+          err = @logError 'TweetStoreService @_dereferenceTweetsForZKey:', exception
         finally
           (callback err, resultList)
 

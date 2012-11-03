@@ -50,7 +50,7 @@ appData.skinTweetAPIAccounts = mongoDB.collection 'tweet_api_accounts'
 r = appData.skinTweetAPIAccounts.find "is_tweet_streamer" : true
 r.toArray (err, items)-> 
   appData.tweetStreamers = items
-  # TweetStreamService.load items   !!!! Temp
+  TweetStreamService.load items
 
 TweetStreamService.on 'Tweet', (tweet)->
   # console.log tweet.toJSON()
@@ -74,7 +74,8 @@ io.configure ->
   (io.set "log level", 2) 
 
 io.sockets.on 'connection', (socket)->
-  TweetStreamService.on 'Tweet', (tweet)-> tweet.emitTo(socket) # emit any new tweets that stream in
+  TweetStreamService.on 'Tweet', (tweet)-> 
+    tweet.emitTo(socket) # emit any new tweets that stream in
 
   socket.on 'user-tweets', (screen_name) => # lookup tweets for user
     TweetStoreService.findUserTweets screen_name, (err, tweets) ->
